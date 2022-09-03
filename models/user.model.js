@@ -42,6 +42,10 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    bio: {
+      type: String,
+      max: 50,
+    },
   },
   { timestamps: true }
 );
