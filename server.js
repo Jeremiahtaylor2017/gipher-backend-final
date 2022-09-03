@@ -7,6 +7,7 @@ require("dotenv").config();
 
 const userRouter = require("./controllers/users.controller");
 const authRouter = require("./controllers/auth.controller");
+const postRouter = require("./controllers/post.controller");
 
 // app setup
 const { PORT, MONGO_URI } = process.env;
@@ -26,6 +27,7 @@ app.use(morgan("dev"));
 
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/post", postRouter);
 
 app.listen(PORT, () => {
   console.log(`Litening on port: ${PORT}`);
