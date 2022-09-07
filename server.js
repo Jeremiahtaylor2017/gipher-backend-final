@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const multer = require("multer");
+const path = require("path");
 require("dotenv").config();
 
 const userRouter = require("./controllers/users.controller");
@@ -26,10 +28,29 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
+app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
+
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, "public/images");
+	},
+	filename: (req, file, cb) => {
+		cb(null, file.originalname);
+	},
+});
+
+const upload = multer({ storage });
+app.post("/api/upload", upload.single("file"), (req, res) => {
+	try {
+		return res.status(200).json("File uploaded successfully");
+	} catch (error) {
+		console.log(error);
+	}
+});
 
 app.listen(PORT, () => {
 	console.log(`Litening on port: ${PORT}`);
