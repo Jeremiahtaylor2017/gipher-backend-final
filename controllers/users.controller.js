@@ -28,7 +28,7 @@ router.put("/:id", async (req, res) => {
 		}
 		try {
 			const user = await User.findByIdAndUpdate(req.params.id, {
-				$set: req.body,
+				$set: req.body
 			});
 			res.status(200).json("Account updated");
 		} catch (error) {
@@ -40,10 +40,10 @@ router.put("/:id", async (req, res) => {
 });
 
 // delete user
-router.delete("/:id", async (req, res) => {
+router.delete("/:username", async (req, res) => {
 	if (req.body.userId === req.params.id || req.body.isAdmin) {
 		try {
-			const user = await User.findByIdAndDelete(req.params.id);
+			const user = await User.findByIdAndDelete(req.params.username);
 			res.status(200).json("Account deleted successfully");
 		} catch (error) {
 			return res.status(500).json(error);
@@ -77,7 +77,7 @@ router.put("/:id/follow", async (req, res) => {
 			if (!user.followers.includes(req.body.userId)) {
 				await user.updateOne({ $push: { followers: req.body.userId } });
 				await currentUser.updateOne({
-					$push: { following: req.params.id },
+					$push: { following: req.params.id }
 				});
 				res.status(200).json("Followed user");
 			} else {
@@ -100,7 +100,7 @@ router.put("/:id/unfollow", async (req, res) => {
 			if (user.followers.includes(req.body.userId)) {
 				await user.updateOne({ $pull: { followers: req.body.userId } });
 				await currentUser.updateOne({
-					$pull: { following: req.params.id },
+					$pull: { following: req.params.id }
 				});
 				res.status(200).json("Unfollowed user");
 			} else {
